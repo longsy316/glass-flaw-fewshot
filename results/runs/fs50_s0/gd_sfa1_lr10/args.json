@@ -1,0 +1,23 @@
+{
+ "train": "data/ssgd_coco/fs50_s0.json",
+ "val": "data/ssgd_coco/all_val.json",
+ "img_root": "data/ssgd/SSGD",
+ "classes": "crack,scratch,chipping,white spot,light leakage,broken film,stain",
+ "gd": "IDEA-Research/grounding-dino-tiny",
+ "sam": "facebook/sam-vit-base",
+ "sfa": 1,
+ "iters": 2000,
+ "bs": 4,
+ "lr": 0.0001,
+ "glare": 0.0,
+ "short": 800,
+ "seed": 0,
+ "out": "runs/fs50_s0/gd_sfa1_lr10",
+ "eval_only": false,
+ "ckpt": "",
+ "lf_from": "",
+ "kd": 1.0,
+ "sfa_lr_mult": 10.0,
+ "gate_init": 0.0,
+ "amp": 1
+}

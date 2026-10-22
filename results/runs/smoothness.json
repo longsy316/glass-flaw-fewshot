@@ -1,0 +1,30 @@
+{
+ "SSGD": {
+  "roughness": 0.04944270158419386,
+  "n_images": 200
+ },
+ "GlassCover": {
+  "roughness": 0.013166074027967213,
+  "n_images": 199
+ },
+ "MSD": {
+  "roughness": 0.16570221997797488,
+  "n_images": 200
+ },
+ "AGDD": {
+  "roughness": 0.01733435267848628,
+  "n_images": 175
+ },
+ "bottle": {
+  "roughness": 0.19263891141689446,
+  "n_images": 73
+ },
+ "vial": {
+  "roughness": 0.10320111862741983,
+  "n_images": 130
+ },
+ "CCB": {
+  "roughness": 0.2218845511227846,
+  "n_images": 200
+ }
+}
