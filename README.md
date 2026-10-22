@@ -1,7 +1,7 @@
-# Few-shot detection, segmentation and metrology of surface flaws in glass
+# Image-based flaw metrology and Weibull strength statistics of brittle glass
 
 Code, data splits and per-run results for the Materials Letters manuscript
-*"Few-shot detection, segmentation and metrology of surface flaws in glass with language-grounded foundation models"*
+*"Image-based flaw metrology and Weibull strength statistics of brittle glass with few-shot vision foundation models"*
 (S. Long, H. Huang, N. Liu, M. Pei).
 
 ## Method in brief
@@ -13,7 +13,10 @@ Code, data splits and per-run results for the Materials Letters manuscript
 3. **Shared-encoder SAM masks.** Every detected box prompts SAM ViT-B; masks give mask AP and flaw metrology.
 4. **Flaw metrology and weakest-link statistics.** Flaw size = skeleton length (aspect >= 3) or maximum Feret diameter;
    relative Griffith strength `(a_GT / a)^0.5`; part strength from the largest flaw and a two-parameter Weibull fit
-   (`geom_eval.py`, `analysis/weibull.py`). All quantities are independent of pixel size and K_IC.
+   (`geom_eval.py`, `analysis/mech.py`). Strength statistics use **mechanical flaws only** (MSD scratches; MVTec bottle
+   broken_large / broken_small), because Griffith's relation does not describe contamination. All quantities are independent
+   of pixel size and K_IC. This is *virtual metrology* against image ground truth: no camera calibration and no
+   mechanical fracture tests.
 5. **Language-free inference.** The text encoder is replaced by distilled static tokens (`train.py --lf_from`).
 
 Ablations reported in the paper are switches of the same code: `--sfa/--sqf` (SAM feature fusion), `bmr.py`
@@ -34,7 +37,7 @@ gains over three seeds; see the paper and `results/`.
 | `baseline_yolo.py` | YOLO11 / RT-DETR baselines on the same splits |
 | `bench.py` | Latency and parameter benchmark |
 | `prep/` | Converters from the original dataset releases to COCO json (deterministic, seeded few-shot splits) |
-| `analysis/` | Weibull and aggregation scripts used for the tables |
+| `analysis/` | Weibull, mechanical-flaw metrology (`mech.py`), Fig. 2 (`weibull_plot.py`) and aggregation scripts |
 | `splits/` | Image-file lists of every split used in the paper |
 | `results/` | `eval_final.json` of every run reported in the paper |
 
@@ -86,8 +89,9 @@ python train.py --train data/ssgd_coco/fs50_s0.json --val data/ssgd_coco/all_val
     --iters 1000 --lr 5e-5 --out runs/fs50_s0/gd_lf
 # 5. masks, flaw metrology and Weibull statistics (MSD example)
 python geom_eval.py --ckpt runs/msd_k30_s0/gd/model.pt --val data/msd_coco/test.json --img_root data/msd/MSD \
-    --classes oil,stain,scratch --out runs/geom2/msd_k30_s0
-PYTHONPATH=. python analysis/weibull.py msd
+    --classes oil,stain,scratch --out runs/geom3/msd_k30_s0
+python analysis/mech.py            # mechanical-flaw metrology and Weibull moduli -> runs/mech.json (Table 1)
+mkdir -p figs && python analysis/weibull_plot.py   # Fig. 2 (reads runs/geom3, writes figs/)
 ```
 
 ## Licence

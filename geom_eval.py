@@ -90,7 +90,7 @@ for pix, tg in DataLoader(ds, batch_size=1, num_workers=4, collate_fn=collate):
     out = {k: (v.float() if torch.is_tensor(v) else v) for k, v in out.items()}
     sc, cl, bx = decode(out, m.label_map, [(H, W)])[0]
     keep = sc >= args.thr
-    sc, bx = sc[keep], bx[keep]
+    sc, cl, bx = sc[keep], cl[keep], bx[keep]
     masks = np.zeros((0, H, W), bool)
     if len(bx):
         h, w = hw
@@ -126,12 +126,15 @@ for pix, tg in DataLoader(ds, batch_size=1, num_workers=4, collate_fn=collate):
         rows.append(r)
     # image-level record for weakest-link analysis: ALL predictions count (false positives included),
     # each flaw sized with its own shape class
-    gts = [geom(gt.annToMask(a).astype(bool)) for a in anns]
-    preds = [geom(mk) for mk in masks]
+    gts = [(geom(gt.annToMask(a).astype(bool)), a['category_id']) for a in anns]
+    preds = [(geom(mk), int(c) + 1) for mk, c in zip(masks, cl)]
     images.append({'image_id': int(tg[0]['image_id']),
-                   'gt': [flaw_size(g, g['aspect']) for g in gts if g],
-                   'pred': [flaw_size(p, p['aspect']) for p in preds if p],
-                   'box': [float(np.hypot(max(b[2] - b[0], 1.0), max(b[3] - b[1], 1.0))) for b in bx]})
+                   'gt': [flaw_size(g, g['aspect']) for g, _ in gts if g],
+                   'gt_cat': [c for g, c in gts if g],
+                   'pred': [flaw_size(p, p['aspect']) for p, _ in preds if p],
+                   'pred_cat': [c for p, c in preds if p],
+                   'box': [float(np.hypot(max(b[2] - b[0], 1.0), max(b[3] - b[1], 1.0))) for b in bx],
+                   'box_cat': [int(c) + 1 for c in cl]})
 
 json.dump(rows, open(f'{args.out}/rows.json', 'w'))
 json.dump(images, open(f'{args.out}/images.json', 'w'))
