@@ -1,0 +1,5 @@
+bad/001_overexposed.png
+bad/001_shift_2.png
+bad/001_shift_3.png
+bad/003_overexposed.png
+bad/006_shift_3.png

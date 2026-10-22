@@ -1,0 +1,9 @@
+images/broken_large_004-94.png
+images/broken_large_018-55.png
+images/broken_large_002-94.png
+images/broken_small_008-92.png
+images/broken_small_003-93.png
+images/broken_small_015-74.png
+images/contamination_009-94.png
+images/contamination_011-83.png
+images/contamination_007-96.png

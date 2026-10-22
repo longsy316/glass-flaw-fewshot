@@ -1,0 +1,10 @@
+bad/000_shift_4.png
+bad/004_shift_4.png
+bad/005_shift_2.png
+bad/007_overexposed.png
+bad/007_shift_1.png
+bad/007_shift_3.png
+bad/008_underexposed.png
+bad/009_shift_1.png
+bad/013_underexposed.png
+bad/014_shift_1.png
